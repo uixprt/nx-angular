@@ -13,7 +13,6 @@ import { WidgetDetailsComponent } from './widgets/widget-details/widget-details.
 import { WidgetsListComponent } from './widgets/widgets-list/widgets-list.component';
 import { WidgetsComponent } from './widgets/widgets.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

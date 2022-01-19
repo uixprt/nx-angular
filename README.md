@@ -1,105 +1,71 @@
-
-
-# AiWeather
+# NxWorkspace
 
 This project was generated using [Nx](https://nx.dev).
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+The creation Progress is as follow:
 
-🔎 **Smart, Fast and Extensible Build System**
+1.  `nvm install stable`
+2.  `npm install -g @angular/cli create-nx-workspace yarn nx`
+3.  `create-nx-workspace nx-workspace --appName=nxWorkspace --preset=angular-nest --npmScope=ai --linter=eslint --style=scss --nx-cloud=false`
+4.  `cd nx-workspace && yarn start`
 
-## Quick Start & Documentation
+    now we get an error in the console:
 
-[Nx Documentation](https://nx.dev/angular)
+    ```
+    [webpack-dev-server] [HPM] Error occurred while proxying request localhost:4200/api/hello to http://localhost:3333/ [ECONNREFUSED] (https://nodejs.org/api/errors.html#errors_common_system_errors)
+    ```
 
-[10-minute video showing all Nx features](https://nx.dev/getting-started/intro)
+    to solve this error:
 
-[Interactive Tutorial](https://nx.dev/tutorial/01-create-application)
+5.  run: `yarn add -D concurrently`
+6.  add this to root `package.json` scripts:
 
-## Adding capabilities to your workspace
+    ```json
+        "start": "npm run serve:all",
+        "serve:api": "nx run api:serve",
+        "serve:web": "ng serve --open",
+        "serve:all": "concurrently \"npm run serve:api\" \"npm run serve:web\"",
+    ```
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+    now in the web page that opened you can see message: "welcome to api!"
+    adding some npm libraries:
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+7.  `nx add @angular/material --defaults=true --interactive=false && nx add @ngrx/store --defaults=true --interactive=false`
+8.  adding two interfaces to file `libs/api-interfaces/src/lib/api-interfaces.ts`
 
-Below are our core plugins:
+    ```ts
+    export interface BaseEntity {
+      id: string | null;
+    }
 
-- [Angular](https://angular.io)
-  - `ng add @nrwl/angular`
-- [React](https://reactjs.org)
-  - `ng add @nrwl/react`
-- Web (no framework frontends)
-  - `ng add @nrwl/web`
-- [Nest](https://nestjs.com)
-  - `ng add @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `ng add @nrwl/express`
-- [Node](https://nodejs.org)
-  - `ng add @nrwl/node`
+    export interface Widget extends BaseEntity {
+      title: string;
+      description: string;
+    }
+    ```
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+    adding libs:
 
-## Generate an application
+9.  `nx g lib core-data --parent-module=apps/dashboard/src/app/app.module.ts && nx g lib core-state --parent-module=apps/dashboard/src/app/app.module.ts && nx g lib material --parent-module=apps/dashboard/src/app/app.module.ts`
 
-Run `ng g @nrwl/angular:app my-app` to generate an application.
+    generate a service:
 
-> You can use any of the plugins above to generate applications as well.
+10. `nx g s service/widgets/widgets --project=core-data`
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+    generate a routing module
 
-## Generate a library
+11. `nx g m routing --flat=true -m=app.module.ts`
 
-Run `ng g @nrwl/angular:lib my-lib` to generate a library.
+    generate some components:
 
-> You can also use any of the plugins above to generate libraries as well.
+12. `nx g c widgets -m app.module.ts --style=scss && nx g c widgets/widgets-list -m app.module.ts --style=scss && nx g c widgets/widget-details -m app.module.ts --style=scss`
+13. `nx g c home -m app.module.ts --style=scss`
+14. copy and paste [this](https://raw.githubusercontent.com/onehungrymind/fem-production-angular/main/libs/material/src/lib/material.module.ts 'form onehungrymind/fem-production-angular') in the same file
 
-Libraries are shareable across libraries and applications. They can be imported from `@ai-weather/mylib`.
+    if you are using VS Code here is an recommended extension: IntelliJ IDEA Keybindings by Keisuke Kato
+    now you can use this with `ctrl + shift + a` to open run console: and run: `Organize Imports`, or `Sort Lines Ascending` on selected lines
 
-## Development server
+### references:
 
-Run `ng serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng g component my-component --project=my-app` to generate a new component.
-
-## Build
-
-Run `ng build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
-
-
-
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+- [Production-Grade Angular](https://frontendmasters.com/courses/production-angular/)
+- [fem-production-angular](https://github.com/onehungrymind/fem-production-angular)
