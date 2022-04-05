@@ -28,6 +28,8 @@ The creation Progress is as follow:
     ```
 
     now in the web page that opened you can see message: "welcome to api!"
+    
+    
     adding some npm libraries:
 
 7.  `nx add @angular/material --defaults=true --interactive=false && nx add @ngrx/store --defaults=true --interactive=false`
